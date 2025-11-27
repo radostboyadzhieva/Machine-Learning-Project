@@ -1,0 +1,66 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
+import numpy as np
+
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
+plot_folder = "plots_pink"
+os.makedirs(plot_folder, exist_ok=True)
+
+pink = "#F06292"
+edge = "#4A4A4A"
+
+df = pd.read_csv(
+    "C:/Users/ASUS/OneDrive/Desktop/FS CBA/SEMESTER ABROAD/MACHINE LEARNING/ML Project/Machine-Learning-Project/claims_train.csv"
+)
+
+print(df.head())
+print(df.info())
+print(df.describe())
+print(df["VehGas"].value_counts())
+
+
+numeric_cols = ['ClaimNb', 'Exposure', 'VehPower', 'VehAge', 'DrivAge', 'BonusMalus', 'Density']
+for col in numeric_cols:
+    plt.figure(figsize=(7,5))
+    plt.hist(df[col], bins=30, color=pink, edgecolor=edge, linewidth=1.2, alpha=0.9)
+    plt.title(f'Distribution of {col} (Normal Scale)', fontsize=13, fontweight='bold')
+    plt.xlabel(col)
+    plt.ylabel('Count')
+    plt.grid(True, alpha=0.25)
+    save_path = os.path.join(plot_folder, f"{col}_hist_normal.png")
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    plt.show()
+
+    if col in ['ClaimNb', 'BonusMalus', 'Density', 'Exposure']:
+        plt.figure(figsize=(7,5))
+        plt.hist(df[col], bins=30, color=pink, edgecolor=edge, linewidth=1.2, alpha=0.9)
+        plt.yscale('log')
+        plt.title(f'Distribution of {col} (Log Scale)', fontsize=13, fontweight='bold')
+        plt.xlabel(col)
+        plt.ylabel('Count (log scale)')
+        plt.grid(True, alpha=0.25)
+        save_path = os.path.join(plot_folder, f"{col}_hist_log.png")
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        plt.show()
+
+cat_cols = ['Area', 'VehBrand', 'VehGas', 'Region']
+for col in cat_cols:
+    plt.figure(figsize=(7,5))
+    df[col].value_counts().plot(
+        kind='bar',
+        color=pink,
+        edgecolor=edge,
+        linewidth=1.2,
+        alpha=0.9
+    )
+    plt.title(f'Count of Each {col}', fontsize=13, fontweight='bold')
+    plt.xlabel(col)
+    plt.ylabel('Count')
+    plt.grid(True, alpha=0.25)
+    save_path = os.path.join(plot_folder, f"{col}_bar.png")
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    plt.show()
