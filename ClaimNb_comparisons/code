@@ -1,0 +1,71 @@
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+
+data_path = r"C:/Users/ASUS/OneDrive/Desktop/FS CBA/SEMESTER ABROAD/MACHINE LEARNING/ML Project/Machine-Learning-Project/claims_train.csv"
+out_folder = "comparisons"
+os.makedirs(out_folder, exist_ok=True)
+
+pink = "#F06292"
+edge = "#4A4A4A"
+plt.rcParams.update({'font.size': 11})
+
+df = pd.read_csv(data_path)
+print("Loaded rows:", len(df))
+
+numeric_cols = ['Exposure', 'VehPower', 'VehAge', 'DrivAge', 'BonusMalus', 'Density']
+cat_cols = ['Area', 'VehBrand', 'VehGas', 'Region']
+target = 'ClaimNb'
+
+def save_show_close(fig, fname):
+    path = os.path.join(out_folder, fname)
+    fig.savefig(path, dpi=300, bbox_inches='tight')
+    print("Saved:", path)
+    plt.show()
+    plt.close(fig)
+
+for col in numeric_cols:
+    fig, ax = plt.subplots(figsize=(7,5))
+    ax.scatter(df[col], df[target], alpha=0.25, s=10, color=pink, edgecolors='none')
+    ax.set_title(f'ClaimNb vs {col} (scatter)', fontsize=13, fontweight='bold')
+    ax.set_xlabel(col)
+    ax.set_ylabel('ClaimNb')
+    ax.grid(True, alpha=0.25)
+    save_show_close(fig, f'ClaimNb_vs_{col}_scatter.png')
+
+    try:
+        df['_bin'] = pd.qcut(df[col].rank(method='first'), q=8, duplicates='drop')
+        grouped = [grp[target].values for _, grp in df.groupby('_bin')]
+        labels = [str(interval) for interval in sorted(df['_bin'].unique())]
+    except:
+        df['_bin'] = pd.cut(df[col], bins=8)
+        grouped = [grp[target].values for _, grp in df.groupby('_bin')]
+        labels = [str(interval) for interval in sorted(df['_bin'].unique())]
+
+    fig, ax = plt.subplots(figsize=(9,5))
+    ax.boxplot(
+        grouped, patch_artist=True,
+        boxprops=dict(facecolor=pink, color=edge),
+        medianprops=dict(color=edge)
+    )
+    ax.set_title(f'ClaimNb distribution by binned {col}', fontsize=13, fontweight='bold')
+    ax.set_xlabel(col + " (binned)")
+    ax.set_ylabel('ClaimNb')
+    ax.set_xticklabels(labels, rotation=45, ha='right')
+    ax.grid(True, alpha=0.25)
+    save_show_close(fig, f'ClaimNb_vs_{col}_boxplot.png')
+
+    df.drop(columns=['_bin'], inplace=True, errors='ignore')
+
+for col in cat_cols:
+    mean_claims = df.groupby(col)[target].mean().sort_values()
+    fig, ax = plt.subplots(figsize=(9,5))
+    mean_claims.plot(kind='bar', ax=ax, color=pink, edgecolor=edge)
+    ax.set_title(f'Average ClaimNb by {col}', fontsize=13, fontweight='bold')
+    ax.set_xlabel(col)
+    ax.set_ylabel('Average ClaimNb')
+    ax.grid(True, alpha=0.25)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
+    save_show_close(fig, f'ClaimNb_vs_{col}_mean.png')
+
+print("All comparison plots saved to folder:", os.path.abspath(out_folder))
