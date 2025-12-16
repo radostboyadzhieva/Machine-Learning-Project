@@ -13,14 +13,7 @@ os.makedirs(plot_folder, exist_ok=True)
 pink = "#F06292"
 edge = "#4A4A4A"
 
-df = pd.read_csv(
-    "C:/Users/ASUS/OneDrive/Desktop/FS CBA/SEMESTER ABROAD/MACHINE LEARNING/ML Project/Machine-Learning-Project/claims_train.csv"
-)
-
-print(df.head())
-print(df.info())
-print(df.describe())
-print(df["VehGas"].value_counts())
+df = pd.read_csv("claims_train.csv")
 
 
 numeric_cols = ['ClaimNb', 'Exposure', 'VehPower', 'VehAge', 'DrivAge', 'BonusMalus', 'Density']

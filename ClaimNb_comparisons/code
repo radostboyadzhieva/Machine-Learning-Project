@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
-data_path = r"C:/Users/ASUS/OneDrive/Desktop/FS CBA/SEMESTER ABROAD/MACHINE LEARNING/ML Project/Machine-Learning-Project/claims_train.csv"
+data_path = r"claims_train.csv"
 out_folder = "comparisons"
 os.makedirs(out_folder, exist_ok=True)
 
