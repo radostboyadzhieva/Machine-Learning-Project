@@ -76,7 +76,7 @@ print("MODEL PERFORMANCE SUMMARY")
 print(f"Best RF hyperparameters : {best_params}")
 print(f"CV mean MSE (train folds): {best_cv_mse:.6f}")
 
-# Plot 1: Predicted vs Actual
+# Plot: Predicted vs Actual
 y_pred_best = best_rf.predict(X_valid)
 fig, ax = plt.subplots(figsize=(7,6))
 ax.scatter(y_valid, y_pred_best, alpha=0.25, color=pink, edgecolors='none')
@@ -87,19 +87,6 @@ ax.set_ylabel("Predicted ClaimNb")
 ax.set_title("Best Random Forest: Predicted vs Actual")
 ax.grid(True, alpha=0.25)
 fig.savefig(os.path.join(out_folder, "RF_pred_vs_actual.png"), dpi=300)
-plt.show()
-plt.close(fig)
-
-# Plot 3: ResidualsHistogram
-residuals = y_valid - y_pred_best
-
-fig, ax = plt.subplots(figsize=(7,5))
-ax.hist(residuals, bins=40, color=pink, edgecolor=edge)
-ax.set_title("Residuals (Actual – Predicted)")
-ax.set_xlabel("Residual")
-ax.set_ylabel("Count")
-ax.grid(True, alpha=0.25)
-fig.savefig(os.path.join(out_folder, "RF_residuals.png"), dpi=300)
 plt.show()
 plt.close(fig)
 
@@ -114,4 +101,5 @@ print("Final RF model trained on the full dataset.")
 
 joblib.dump(final_rf, "rf_final_model.pkl")
 print("Final RF model saved to rf_final_model.pkl")
+
 
