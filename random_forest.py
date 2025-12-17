@@ -90,22 +90,6 @@ fig.savefig(os.path.join(out_folder, "RF_pred_vs_actual.png"), dpi=300)
 plt.show()
 plt.close(fig)
 
-# Plot 2: Feature Importances
-fi = best_rf.feature_importances_
-feat_names = [f"f{i}" for i in range(len(fi))]
-importances = pd.Series(fi, index=feat_names)
-top20 = importances.sort_values(ascending=False).head(20)
-
-fig, ax = plt.subplots(figsize=(10,6))
-top20.plot(kind='bar', ax=ax, color=pink, edgecolor=edge)
-ax.set_title("Best RF – Top 20 Feature Importances")
-ax.set_ylabel("Importance")
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
-ax.grid(True, alpha=0.25)
-fig.savefig(os.path.join(out_folder, "RF_feature_importances.png"), dpi=300)
-plt.show()
-plt.close(fig)
-
 # Plot 3: ResidualsHistogram
 residuals = y_valid - y_pred_best
 
@@ -130,3 +114,4 @@ print("Final RF model trained on the full dataset.")
 
 joblib.dump(final_rf, "rf_final_model.pkl")
 print("Final RF model saved to rf_final_model.pkl")
+
