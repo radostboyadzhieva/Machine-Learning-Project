@@ -1,2 +1,0 @@
-Best max_depth: 7
-Best min_samples: 50
