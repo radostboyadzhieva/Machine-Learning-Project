@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def best_split(X, y):
     n_features = X.shape[1]
     best_rss = float('inf')
